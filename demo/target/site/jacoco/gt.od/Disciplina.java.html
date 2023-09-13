@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Disciplina.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">gt.od</a> &gt; <span class="el_source">Disciplina.java</span></div><h1>Disciplina.java</h1><pre class="source lang-java linenums">package gt.od;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.JOptionPane;
+
+// import java.util.Map;
+
+<span class="nc" id="L13">public class Disciplina{</span>
+    // public static Map&lt;String,Disciplina&gt; disciplinas;
+    private int id;
+    private String codigo;
+    private String nomeDisciplina;
+    private int chPrevista;
+    private int periodo;
+    private int creditos;
+    private float nf1e;
+    private float nf2e;
+    private float frequencia;
+    private int ano;
+    private String situacao;
+
+    public void setCreditos(int creditos) {
+<span class="nc" id="L28">        this.creditos = creditos;</span>
+<span class="nc" id="L29">    }</span>
+
+    public int getId() {
+<span class="nc" id="L32">        return this.id;</span>
+    }
+
+    public void setId(int id) {
+<span class="nc" id="L36">        this.id = id;</span>
+<span class="nc" id="L37">    }</span>
+
+    public String getCodigo() {
+<span class="nc" id="L40">        return this.codigo;</span>
+    }
+
+    public void setCodigo(String codigo) {
+<span class="nc" id="L44">        this.codigo = codigo;</span>
+<span class="nc" id="L45">    }</span>
+
+    public void setNomeDisciplina(String nomeDisciplina) {
+<span class="nc" id="L48">        this.nomeDisciplina = nomeDisciplina;</span>
+<span class="nc" id="L49">    }</span>
+
+    public void setChPrevista(int chPrevista) {
+<span class="nc" id="L52">        this.chPrevista = chPrevista;</span>
+<span class="nc" id="L53">    }</span>
+
+    public void setPeriodo(int periodo) {
+<span class="nc" id="L56">        this.periodo = periodo;</span>
+<span class="nc" id="L57">    }</span>
+
+    public float getNf1e() {
+<span class="nc" id="L60">        return this.nf1e;</span>
+    }
+
+    public void setNf1e(float nf1e) {
+<span class="nc" id="L64">        this.nf1e = nf1e;</span>
+<span class="nc" id="L65">    }</span>
+
+    public float getNf2e() {
+<span class="nc" id="L68">        return this.nf2e;</span>
+    }
+
+    public void setNf2e(float nf2e) {
+<span class="nc" id="L72">        this.nf2e = nf2e;</span>
+<span class="nc" id="L73">    }</span>
+
+    public float getFrequencia() {
+<span class="nc" id="L76">        return this.frequencia;</span>
+    }
+
+    public void setFrequencia(float frequencia) {
+<span class="nc" id="L80">        this.frequencia = frequencia;</span>
+<span class="nc" id="L81">    }</span>
+
+    public int getAno() {
+<span class="nc" id="L84">        return this.ano;</span>
+    }
+
+    public void setAno(int ano) {
+<span class="nc" id="L88">        this.ano = ano;</span>
+<span class="nc" id="L89">    }</span>
+
+    public String getSituacao() {
+<span class="nc" id="L92">        return this.situacao;</span>
+    }
+
+    public void setSituacao(String situacao) {
+<span class="nc" id="L96">        this.situacao = situacao;</span>
+<span class="nc" id="L97">    }</span>
+
+    public void salvar(Connection connection){
+<span class="nc" id="L100">		Statement stmt = null;</span>
+<span class="nc" id="L101">		ResultSet rs = null;</span>
+		try {
+<span class="nc" id="L103">			stmt = connection.createStatement();</span>
+<span class="nc" id="L104">			String query = &quot;select * from disciplina where codigo='&quot; + this.codigo + &quot;';&quot;;</span>
+<span class="nc" id="L105">			rs = stmt.executeQuery(query);</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">			if (!rs.next()) { // se a disciplina ainda nao foi cadastrada.</span>
+<span class="nc" id="L107">				query = &quot;INSERT INTO `disciplina` (`codigo`, `nome_disciplina`, `ch_prevista`, `periodo`, `creditos`&quot; + </span>
+				&quot;) &quot; + &quot;VALUES (?, ?, ?, ?, ?)&quot;;
+<span class="nc" id="L109">				PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);</span>
+<span class="nc" id="L110">				ps.setString(1, this.codigo);</span>
+<span class="nc" id="L111">				ps.setString(2, this.nomeDisciplina);</span>
+<span class="nc" id="L112">				ps.setInt(3, this.chPrevista);</span>
+<span class="nc" id="L113">				ps.setInt(4, this.periodo);</span>
+<span class="nc" id="L114">				ps.setInt(5, this.creditos);</span>
+<span class="nc" id="L115">				ps.executeUpdate();</span>
+<span class="nc" id="L116">                ResultSet generatedKeys = ps.getGeneratedKeys();</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                if(generatedKeys.next()){</span>
+<span class="nc" id="L118">                    this.id = generatedKeys.getInt(1);</span>
+                }
+                //pegar o id da ultima insercao em salvar em ID.
+<span class="nc" id="L121">			} else {</span>
+<span class="nc" id="L122">				this.id = rs.getInt(&quot;id&quot;);</span>
+			}
+<span class="nc" id="L124">		} catch (SQLException ex) {</span>
+            // JOptionPane.showMessageDialog(null, this.nomeDisciplina);
+<span class="nc" id="L126">			System.out.println(ex.toString());</span>
+<span class="nc" id="L127">            ex.printStackTrace();</span>
+		}
+<span class="nc" id="L129">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
