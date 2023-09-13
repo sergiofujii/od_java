@@ -5,7 +5,6 @@
  */
 package gt.od;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  *
@@ -21,7 +21,7 @@ import org.jsoup.nodes.Element;
 public class HistoricoParser {
 
 	public static void main(String[] args) throws Exception {
-		if(args.length != 1){
+		if (args.length != 1) {
 			System.out.println("USAGE: you must pass the name of the html file as parameter");
 			System.exit(0);
 		}
@@ -36,30 +36,40 @@ public class HistoricoParser {
 		List<Element> disciplinasNaMatriz = new ArrayList<>();
 		List<Element> disciplinasForaDaMatriz = new ArrayList<>();
 		List<Element> infoCH = new ArrayList<>();
-		
+
 		// crio o objeto aluno
 		Aluno aluno = new Aluno();
 
 		int i = 0;
 		int STATE = 0;
 		// classificando os elementos da página HTML
-		for (Element e : doc.getAllElements()) { // conteudoTexto eh a class de um tr
+
+		// for (Element e : doc.getAllElements()) { // conteudoTexto eh a class de um tr
+		for (Element e : doc.select("tr")) {	
+			if (e.hasAttr("class") && e.attr("class").isEmpty()) 
+				System.out.println(e.toString() + "\n");
 			// IDENTIFICANDO A PARTE INICIAL.
 			if (e.classNames().contains("conteudoTexto") && !e.attr("bgcolor").equals("")) {
 				if (i <= 3) {
 					switch (i) {
 						case 0:
 							dadosAluno = e;
+							System.out.println(e.toString());
+							System.out.println("**********************************");
 							i++;
 							processarDadosAluno(aluno, e);
 							break;
 						case 1:
 							dadosCurso = e;
+							System.out.println(e.toString());
+							System.out.println("**********************************");
 							processarDadosCurso(aluno, e);
 							i++;
 							break;
 						case 2:
 							numGerais = e;
+							System.out.println(e.toString());
+							System.out.println("**********************************");
 							processarNumerosGerais(aluno, e);
 							i++;
 							break;
@@ -72,12 +82,18 @@ public class HistoricoParser {
 						break;// so ignora
 					case 1:
 						disciplinasNaMatriz.add(e);
+						// System.out.println(e.toString());
+						// System.out.println("**********************************");
 						break;
 					case 2:
 						disciplinasForaDaMatriz.add(e);
+						// System.out.println(e.toString());
+						// System.out.println("**********************************");
 						break;
 					case 3:
 						infoCH.add(e);
+						// System.out.println(e.toString());
+						// System.out.println("**********************************");
 						break;
 				}
 			}
@@ -97,31 +113,32 @@ public class HistoricoParser {
 				}
 			}
 		}
-		String [] pathExploded = bypass.split("/");
+		String[] pathExploded = bypass.split("/");
 
-		System.out.print("MATRICULA: " + pathExploded[pathExploded.length -1].replace(".html", ""));
-		System.out.print(", No. Materias na Matriz: " + disciplinasNaMatriz.size());
+		// System.out.print("MATRICULA: " + pathExploded[pathExploded.length
+		// -1].replace(".html", ""));
+		// System.out.print(", No. Materias na Matriz: " + disciplinasNaMatriz.size());
 		for (Element e : disciplinasNaMatriz) { // conteudoTexto eh a class de um tr
 			processarDisciplina(aluno, e);
 		}
 
-		System.out.print(", Fora da Matriz: " + disciplinasForaDaMatriz.size());
+		// System.out.print(", Fora da Matriz: " + disciplinasForaDaMatriz.size());
 		for (Element e : disciplinasForaDaMatriz) { // conteudoTexto eh a class de um tr
 			System.out.print("ATENCAO: nao registrada: ");
 			System.out.println(e.toString());
 		}
 
-		System.out.println(". Registrando CH OBR e Estagio.");
+		// System.out.println(". Registrando CH OBR e Estagio.");
 		for (Element e : infoCH) { // conteudoTexto eh a class de um tr
-			if(e.text().contains("Cumprida")){ // se o primeiro td tem o texto "Cumprida", processa a linha
+			if (e.text().contains("Cumprida")) { // se o primeiro td tem o texto "Cumprida", processa a linha
 				processarInfoCH(aluno, e);
 			}
 		}
 
-		 aluno.salvar();
+		// aluno.salvar();
 	}
 
-	public static void processarDadosAluno(Aluno aluno, Element tr){
+	public static void processarDadosAluno(Aluno aluno, Element tr) {
 		ArrayList<Element> infoAluno = new ArrayList<>();
 		// System.out.println("**********************************");
 		for (Element e : tr.getElementsByTag("td")) {
@@ -131,8 +148,8 @@ public class HistoricoParser {
 		aluno.setNome(infoAluno.get(1).text().trim());
 		aluno.setDataNasc(infoAluno.get(2).text().trim());
 	}
-	
-	public static void processarDadosCurso(Aluno aluno, Element tr){
+
+	public static void processarDadosCurso(Aluno aluno, Element tr) {
 		ArrayList<Element> infoCurso = new ArrayList<>();
 		// System.out.println("**********************************");
 		for (Element e : tr.getElementsByTag("td")) {
@@ -141,7 +158,7 @@ public class HistoricoParser {
 		aluno.setCurso(infoCurso.get(0).text().trim());
 	}
 
-	public static void processarNumerosGerais(Aluno aluno, Element tr){
+	public static void processarNumerosGerais(Aluno aluno, Element tr) {
 		ArrayList<Element> infoGeral = new ArrayList<>();
 		// System.out.println("**********************************");
 		for (Element e : tr.getElementsByTag("td")) {
@@ -151,49 +168,52 @@ public class HistoricoParser {
 		aluno.setCoeficienteProgressao(Float.parseFloat(infoGeral.get(1).text().trim()));
 	}
 
-	public static void processarDisciplina(Aluno aluno, Element tr){
+	public static void processarDisciplina(Aluno aluno, Element tr) {
 		ArrayList<Element> infoDisciplina = new ArrayList<>();
 		// System.out.println("**********************************");
 		for (Element e : tr.getElementsByTag("td")) {
 			infoDisciplina.add(e);
+			// System.out.println(e + "\n");
 		}
+		
 		Disciplina disciplina = new Disciplina();
 		// processando ano
 		String ano = infoDisciplina.get(0).text().trim();
-		if(ano.isEmpty()){
+		if (ano.isEmpty()) {
 			ano = "1900";
-		}else if(ano.contains("/")){
+		} else if (ano.contains("/")) {
 			ano = ano.split("/")[0];
 		}
 		disciplina.setAno(Integer.parseInt(ano));
 		String periodoStr = infoDisciplina.get(1).text().trim();
 		// em alguns casos de equivalencia, o periodo pode aparecer vazio
-		disciplina.setPeriodo(Integer.parseInt(!periodoStr.isEmpty()?periodoStr:"-1"));
-		
+		disciplina.setPeriodo(Integer.parseInt(!periodoStr.isEmpty() ? periodoStr : "-1"));
+
 		disciplina.setCodigo(infoDisciplina.get(2).text().trim());
 		disciplina.setNomeDisciplina(infoDisciplina.get(3).text().trim());
 		disciplina.setChPrevista(Integer.parseInt(infoDisciplina.get(5).text().trim()));
 		String notas = infoDisciplina.get(7).text().trim();
 		String nfe1 = "0", nfe2 = "0";
-		if(notas.contains("-")){
+		if (notas.contains("-")) {
 			nfe1 = notas.split("-")[0].trim();
 			nfe2 = notas.split("-")[1].trim();
 		}
 		disciplina.setNf1e(Float.parseFloat(nfe1));
 		disciplina.setNf1e(Float.parseFloat(nfe2));
 		String creditosStr = infoDisciplina.get(6).text().trim();
-		// disciplinas em que foi feito equivalencia creditos é zero. Olhar disciplinas fora da matriz
-		disciplina.setCreditos(Integer.parseInt(!creditosStr.isEmpty()?creditosStr:"0"));
-		
+		// disciplinas em que foi feito equivalencia creditos é zero. Olhar disciplinas
+		// fora da matriz
+		disciplina.setCreditos(Integer.parseInt(!creditosStr.isEmpty() ? creditosStr : "0"));
+
 		String freqenciaStr = infoDisciplina.get(8).text().trim();
 		// disciplinas nao cursada tem frequencia vazia.
-		disciplina.setFrequencia(Float.parseFloat(!freqenciaStr.isEmpty()?freqenciaStr:"0"));
+		disciplina.setFrequencia(Float.parseFloat(!freqenciaStr.isEmpty() ? freqenciaStr : "0"));
 		disciplina.setSituacao(infoDisciplina.get(9).text().trim());
-		
-		aluno.getDisciplinas().add(disciplina);
+
+		aluno.getDisciplinas().add(disciplina);    // ??
 	}
 
-	public static void processarInfoCH(Aluno aluno, Element tr){
+	public static void processarInfoCH(Aluno aluno, Element tr) {
 		ArrayList<Element> infoCh = new ArrayList<>();
 		// System.out.println("**********************************");
 		for (Element e : tr.getElementsByTag("td")) {
@@ -205,6 +225,6 @@ public class HistoricoParser {
 		aluno.setChObrigatoriaCumprida(Integer.parseInt(infoCh.get(1).text().trim()));
 		aluno.setChEstagioCumprida(Integer.parseInt(infoCh.get(3).text().trim()));
 		aluno.setChTotalCumprida(Integer.parseInt(infoCh.get(7).text().trim()));
-		
+
 	}
 }

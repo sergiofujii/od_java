@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: gt.od.AppTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s - in gt.od.AppTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s - in gt.od.AppTest

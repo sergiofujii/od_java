@@ -1,4 +1,0 @@
-# Created at 2023-09-13T08:03:10.244
-Boot Manifest-JAR contains absolute paths in classpath 'D:\IFSul\2023-1\Organização Didática\Calebe\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-

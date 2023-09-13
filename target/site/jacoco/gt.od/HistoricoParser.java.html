@@ -5,7 +5,6 @@
  */
 package gt.od;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  *
@@ -21,7 +21,7 @@ import org.jsoup.nodes.Element;
 <span class="nc" id="L21">public class HistoricoParser {</span>
 
 	public static void main(String[] args) throws Exception {
-<span class="nc bnc" id="L24" title="All 2 branches missed.">		if(args.length != 1){</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">		if (args.length != 1) {</span>
 <span class="nc" id="L25">			System.out.println(&quot;USAGE: you must pass the name of the html file as parameter&quot;);</span>
 <span class="nc" id="L26">			System.exit(0);</span>
 		}
@@ -36,176 +36,196 @@ import org.jsoup.nodes.Element;
 <span class="nc" id="L36">		List&lt;Element&gt; disciplinasNaMatriz = new ArrayList&lt;&gt;();</span>
 <span class="nc" id="L37">		List&lt;Element&gt; disciplinasForaDaMatriz = new ArrayList&lt;&gt;();</span>
 <span class="nc" id="L38">		List&lt;Element&gt; infoCH = new ArrayList&lt;&gt;();</span>
-		
+
 		// crio o objeto aluno
 <span class="nc" id="L41">		Aluno aluno = new Aluno();</span>
 
 <span class="nc" id="L43">		int i = 0;</span>
 <span class="nc" id="L44">		int STATE = 0;</span>
 		// classificando os elementos da página HTML
-<span class="nc bnc" id="L46" title="All 2 branches missed.">		for (Element e : doc.getAllElements()) { // conteudoTexto eh a class de um tr</span>
+
+		// for (Element e : doc.getAllElements()) { // conteudoTexto eh a class de um tr
+<span class="nc bnc" id="L48" title="All 2 branches missed.">		for (Element e : doc.select(&quot;tr&quot;)) {	</span>
+<span class="nc bnc" id="L49" title="All 4 branches missed.">			if (e.hasAttr(&quot;class&quot;) &amp;&amp; e.attr(&quot;class&quot;).isEmpty()) </span>
+<span class="nc" id="L50">				System.out.println(e.toString() + &quot;\n&quot;);</span>
 			// IDENTIFICANDO A PARTE INICIAL.
-<span class="nc bnc" id="L48" title="All 4 branches missed.">			if (e.classNames().contains(&quot;conteudoTexto&quot;) &amp;&amp; !e.attr(&quot;bgcolor&quot;).equals(&quot;&quot;)) {</span>
-<span class="nc bnc" id="L49" title="All 2 branches missed.">				if (i &lt;= 3) {</span>
-<span class="nc bnc" id="L50" title="All 4 branches missed.">					switch (i) {</span>
+<span class="nc bnc" id="L52" title="All 4 branches missed.">			if (e.classNames().contains(&quot;conteudoTexto&quot;) &amp;&amp; !e.attr(&quot;bgcolor&quot;).equals(&quot;&quot;)) {</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">				if (i &lt;= 3) {</span>
+<span class="nc bnc" id="L54" title="All 4 branches missed.">					switch (i) {</span>
 						case 0:
-<span class="nc" id="L52">							dadosAluno = e;</span>
-<span class="nc" id="L53">							i++;</span>
-<span class="nc" id="L54">							processarDadosAluno(aluno, e);</span>
-<span class="nc" id="L55">							break;</span>
-						case 1:
-<span class="nc" id="L57">							dadosCurso = e;</span>
-<span class="nc" id="L58">							processarDadosCurso(aluno, e);</span>
+<span class="nc" id="L56">							dadosAluno = e;</span>
+<span class="nc" id="L57">							System.out.println(e.toString());</span>
+<span class="nc" id="L58">							System.out.println(&quot;**********************************&quot;);</span>
 <span class="nc" id="L59">							i++;</span>
-<span class="nc" id="L60">							break;</span>
+<span class="nc" id="L60">							processarDadosAluno(aluno, e);</span>
+<span class="nc" id="L61">							break;</span>
+						case 1:
+<span class="nc" id="L63">							dadosCurso = e;</span>
+<span class="nc" id="L64">							System.out.println(e.toString());</span>
+<span class="nc" id="L65">							System.out.println(&quot;**********************************&quot;);</span>
+<span class="nc" id="L66">							processarDadosCurso(aluno, e);</span>
+<span class="nc" id="L67">							i++;</span>
+<span class="nc" id="L68">							break;</span>
 						case 2:
-<span class="nc" id="L62">							numGerais = e;</span>
-<span class="nc" id="L63">							processarNumerosGerais(aluno, e);</span>
-<span class="nc" id="L64">							i++;</span>
-<span class="nc" id="L65">							break;</span>
+<span class="nc" id="L70">							numGerais = e;</span>
+<span class="nc" id="L71">							System.out.println(e.toString());</span>
+<span class="nc" id="L72">							System.out.println(&quot;**********************************&quot;);</span>
+<span class="nc" id="L73">							processarNumerosGerais(aluno, e);</span>
+<span class="nc" id="L74">							i++;</span>
+<span class="nc" id="L75">							break;</span>
 						case 3: // faz nada
 							break;
 					}
 				}
-<span class="nc bnc" id="L70" title="All 5 branches missed.">				switch (STATE) {</span>
+<span class="nc bnc" id="L80" title="All 5 branches missed.">				switch (STATE) {</span>
 					case 0:
-<span class="nc" id="L72">						break;// so ignora</span>
+<span class="nc" id="L82">						break;// so ignora</span>
 					case 1:
-<span class="nc" id="L74">						disciplinasNaMatriz.add(e);</span>
-<span class="nc" id="L75">						break;</span>
+<span class="nc" id="L84">						disciplinasNaMatriz.add(e);</span>
+						// System.out.println(e.toString());
+						// System.out.println(&quot;**********************************&quot;);
+<span class="nc" id="L87">						break;</span>
 					case 2:
-<span class="nc" id="L77">						disciplinasForaDaMatriz.add(e);</span>
-<span class="nc" id="L78">						break;</span>
+<span class="nc" id="L89">						disciplinasForaDaMatriz.add(e);</span>
+						// System.out.println(e.toString());
+						// System.out.println(&quot;**********************************&quot;);
+<span class="nc" id="L92">						break;</span>
 					case 3:
-<span class="nc" id="L80">						infoCH.add(e);</span>
+<span class="nc" id="L94">						infoCH.add(e);</span>
+						// System.out.println(e.toString());
+						// System.out.println(&quot;**********************************&quot;);
 						break;
 				}
 			}
-<span class="nc bnc" id="L84" title="All 2 branches missed.">			if (e.classNames().contains(&quot;conteudoTitulo&quot;)) {</span>
-<span class="nc bnc" id="L85" title="All 2 branches missed.">				if (e.text().contains(&quot;Disciplinas cursadas na matriz curricular:&quot;)) {</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">			if (e.classNames().contains(&quot;conteudoTitulo&quot;)) {</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">				if (e.text().contains(&quot;Disciplinas cursadas na matriz curricular:&quot;)) {</span>
 					// System.out.println(&quot;ENTRANDO NO ESTADO 1&quot;);
 					// System.out.println( e.toString());
-<span class="nc" id="L88">					STATE = 1;</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">				} else if (e.text().contains(&quot;Disciplinas cursadas fora da matriz curricular:&quot;)) {</span>
+<span class="nc" id="L104">					STATE = 1;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">				} else if (e.text().contains(&quot;Disciplinas cursadas fora da matriz curricular:&quot;)) {</span>
 					// System.out.println(&quot;ENTRANDO NO ESTADO 2&quot;);
 					// System.out.println( e.toString());
-<span class="nc" id="L92">					STATE = 2;</span>
-<span class="nc bnc" id="L93" title="All 2 branches missed.">				} else if (e.text().contains(&quot;Carga Hor&quot;)) {</span>
+<span class="nc" id="L108">					STATE = 2;</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">				} else if (e.text().contains(&quot;Carga Hor&quot;)) {</span>
 					// System.out.println(&quot;ENTRANDO NO ESTADO 3&quot;);
 					// System.out.println( e.toString());
-<span class="nc" id="L96">					STATE = 3;</span>
+<span class="nc" id="L112">					STATE = 3;</span>
 				}
 			}
-<span class="nc" id="L99">		}</span>
-<span class="nc" id="L100">		String [] pathExploded = bypass.split(&quot;/&quot;);</span>
+<span class="nc" id="L115">		}</span>
+<span class="nc" id="L116">		String[] pathExploded = bypass.split(&quot;/&quot;);</span>
 
-<span class="nc" id="L102">		System.out.print(&quot;MATRICULA: &quot; + pathExploded[pathExploded.length -1].replace(&quot;.html&quot;, &quot;&quot;));</span>
-<span class="nc" id="L103">		System.out.print(&quot;, No. Materias na Matriz: &quot; + disciplinasNaMatriz.size());</span>
-<span class="nc bnc" id="L104" title="All 2 branches missed.">		for (Element e : disciplinasNaMatriz) { // conteudoTexto eh a class de um tr</span>
-<span class="nc" id="L105">			processarDisciplina(aluno, e);</span>
-<span class="nc" id="L106">		}</span>
+		// System.out.print(&quot;MATRICULA: &quot; + pathExploded[pathExploded.length
+		// -1].replace(&quot;.html&quot;, &quot;&quot;));
+		// System.out.print(&quot;, No. Materias na Matriz: &quot; + disciplinasNaMatriz.size());
+<span class="nc bnc" id="L121" title="All 2 branches missed.">		for (Element e : disciplinasNaMatriz) { // conteudoTexto eh a class de um tr</span>
+<span class="nc" id="L122">			processarDisciplina(aluno, e);</span>
+<span class="nc" id="L123">		}</span>
 
-<span class="nc" id="L108">		System.out.print(&quot;, Fora da Matriz: &quot; + disciplinasForaDaMatriz.size());</span>
-<span class="nc bnc" id="L109" title="All 2 branches missed.">		for (Element e : disciplinasForaDaMatriz) { // conteudoTexto eh a class de um tr</span>
-<span class="nc" id="L110">			System.out.print(&quot;ATENCAO: nao registrada: &quot;);</span>
-<span class="nc" id="L111">			System.out.println(e.toString());</span>
-<span class="nc" id="L112">		}</span>
-
-<span class="nc" id="L114">		System.out.println(&quot;. Registrando CH OBR e Estagio.&quot;);</span>
-<span class="nc bnc" id="L115" title="All 2 branches missed.">		for (Element e : infoCH) { // conteudoTexto eh a class de um tr</span>
-<span class="nc bnc" id="L116" title="All 2 branches missed.">			if(e.text().contains(&quot;Cumprida&quot;)){ // se o primeiro td tem o texto &quot;Cumprida&quot;, processa a linha</span>
-<span class="nc" id="L117">				processarInfoCH(aluno, e);</span>
-			}
-<span class="nc" id="L119">		}</span>
-
-<span class="nc" id="L121">		 aluno.salvar();</span>
-<span class="nc" id="L122">	}</span>
-
-	public static void processarDadosAluno(Aluno aluno, Element tr){
-<span class="nc" id="L125">		ArrayList&lt;Element&gt; infoAluno = new ArrayList&lt;&gt;();</span>
-		// System.out.println(&quot;**********************************&quot;);
-<span class="nc bnc" id="L127" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
-<span class="nc" id="L128">			infoAluno.add(e);</span>
+		// System.out.print(&quot;, Fora da Matriz: &quot; + disciplinasForaDaMatriz.size());
+<span class="nc bnc" id="L126" title="All 2 branches missed.">		for (Element e : disciplinasForaDaMatriz) { // conteudoTexto eh a class de um tr</span>
+<span class="nc" id="L127">			System.out.print(&quot;ATENCAO: nao registrada: &quot;);</span>
+<span class="nc" id="L128">			System.out.println(e.toString());</span>
 <span class="nc" id="L129">		}</span>
-<span class="nc" id="L130">		aluno.setMatricula(infoAluno.get(0).text().trim());</span>
-<span class="nc" id="L131">		aluno.setNome(infoAluno.get(1).text().trim());</span>
-<span class="nc" id="L132">		aluno.setDataNasc(infoAluno.get(2).text().trim());</span>
-<span class="nc" id="L133">	}</span>
-	
-	public static void processarDadosCurso(Aluno aluno, Element tr){
-<span class="nc" id="L136">		ArrayList&lt;Element&gt; infoCurso = new ArrayList&lt;&gt;();</span>
-		// System.out.println(&quot;**********************************&quot;);
-<span class="nc bnc" id="L138" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
-<span class="nc" id="L139">			infoCurso.add(e);</span>
-<span class="nc" id="L140">		}</span>
-<span class="nc" id="L141">		aluno.setCurso(infoCurso.get(0).text().trim());</span>
-<span class="nc" id="L142">	}</span>
 
-	public static void processarNumerosGerais(Aluno aluno, Element tr){
-<span class="nc" id="L145">		ArrayList&lt;Element&gt; infoGeral = new ArrayList&lt;&gt;();</span>
-		// System.out.println(&quot;**********************************&quot;);
-<span class="nc bnc" id="L147" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
-<span class="nc" id="L148">			infoGeral.add(e);</span>
-<span class="nc" id="L149">		}</span>
-<span class="nc" id="L150">		aluno.setCoeficienteRendimento(Float.parseFloat(infoGeral.get(0).text().trim()));</span>
-<span class="nc" id="L151">		aluno.setCoeficienteProgressao(Float.parseFloat(infoGeral.get(1).text().trim()));</span>
-<span class="nc" id="L152">	}</span>
+		// System.out.println(&quot;. Registrando CH OBR e Estagio.&quot;);
+<span class="nc bnc" id="L132" title="All 2 branches missed.">		for (Element e : infoCH) { // conteudoTexto eh a class de um tr</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">			if (e.text().contains(&quot;Cumprida&quot;)) { // se o primeiro td tem o texto &quot;Cumprida&quot;, processa a linha</span>
+<span class="nc" id="L134">				processarInfoCH(aluno, e);</span>
+			}
+<span class="nc" id="L136">		}</span>
 
-	public static void processarDisciplina(Aluno aluno, Element tr){
-<span class="nc" id="L155">		ArrayList&lt;Element&gt; infoDisciplina = new ArrayList&lt;&gt;();</span>
+		// aluno.salvar();
+<span class="nc" id="L139">	}</span>
+
+	public static void processarDadosAluno(Aluno aluno, Element tr) {
+<span class="nc" id="L142">		ArrayList&lt;Element&gt; infoAluno = new ArrayList&lt;&gt;();</span>
 		// System.out.println(&quot;**********************************&quot;);
-<span class="nc bnc" id="L157" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
-<span class="nc" id="L158">			infoDisciplina.add(e);</span>
-<span class="nc" id="L159">		}</span>
-<span class="nc" id="L160">		Disciplina disciplina = new Disciplina();</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
+<span class="nc" id="L145">			infoAluno.add(e);</span>
+<span class="nc" id="L146">		}</span>
+<span class="nc" id="L147">		aluno.setMatricula(infoAluno.get(0).text().trim());</span>
+<span class="nc" id="L148">		aluno.setNome(infoAluno.get(1).text().trim());</span>
+<span class="nc" id="L149">		aluno.setDataNasc(infoAluno.get(2).text().trim());</span>
+<span class="nc" id="L150">	}</span>
+
+	public static void processarDadosCurso(Aluno aluno, Element tr) {
+<span class="nc" id="L153">		ArrayList&lt;Element&gt; infoCurso = new ArrayList&lt;&gt;();</span>
+		// System.out.println(&quot;**********************************&quot;);
+<span class="nc bnc" id="L155" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
+<span class="nc" id="L156">			infoCurso.add(e);</span>
+<span class="nc" id="L157">		}</span>
+<span class="nc" id="L158">		aluno.setCurso(infoCurso.get(0).text().trim());</span>
+<span class="nc" id="L159">	}</span>
+
+	public static void processarNumerosGerais(Aluno aluno, Element tr) {
+<span class="nc" id="L162">		ArrayList&lt;Element&gt; infoGeral = new ArrayList&lt;&gt;();</span>
+		// System.out.println(&quot;**********************************&quot;);
+<span class="nc bnc" id="L164" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
+<span class="nc" id="L165">			infoGeral.add(e);</span>
+<span class="nc" id="L166">		}</span>
+<span class="nc" id="L167">		aluno.setCoeficienteRendimento(Float.parseFloat(infoGeral.get(0).text().trim()));</span>
+<span class="nc" id="L168">		aluno.setCoeficienteProgressao(Float.parseFloat(infoGeral.get(1).text().trim()));</span>
+<span class="nc" id="L169">	}</span>
+
+	public static void processarDisciplina(Aluno aluno, Element tr) {
+<span class="nc" id="L172">		ArrayList&lt;Element&gt; infoDisciplina = new ArrayList&lt;&gt;();</span>
+		// System.out.println(&quot;**********************************&quot;);
+<span class="nc bnc" id="L174" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
+<span class="nc" id="L175">			infoDisciplina.add(e);</span>
+			// System.out.println(e + &quot;\n&quot;);
+<span class="nc" id="L177">		}</span>
+		
+<span class="nc" id="L179">		Disciplina disciplina = new Disciplina();</span>
 		// processando ano
-<span class="nc" id="L162">		String ano = infoDisciplina.get(0).text().trim();</span>
-<span class="nc bnc" id="L163" title="All 2 branches missed.">		if(ano.isEmpty()){</span>
-<span class="nc" id="L164">			ano = &quot;1900&quot;;</span>
-<span class="nc bnc" id="L165" title="All 2 branches missed.">		}else if(ano.contains(&quot;/&quot;)){</span>
-<span class="nc" id="L166">			ano = ano.split(&quot;/&quot;)[0];</span>
+<span class="nc" id="L181">		String ano = infoDisciplina.get(0).text().trim();</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">		if (ano.isEmpty()) {</span>
+<span class="nc" id="L183">			ano = &quot;1900&quot;;</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">		} else if (ano.contains(&quot;/&quot;)) {</span>
+<span class="nc" id="L185">			ano = ano.split(&quot;/&quot;)[0];</span>
 		}
-<span class="nc" id="L168">		disciplina.setAno(Integer.parseInt(ano));</span>
-<span class="nc" id="L169">		String periodoStr = infoDisciplina.get(1).text().trim();</span>
+<span class="nc" id="L187">		disciplina.setAno(Integer.parseInt(ano));</span>
+<span class="nc" id="L188">		String periodoStr = infoDisciplina.get(1).text().trim();</span>
 		// em alguns casos de equivalencia, o periodo pode aparecer vazio
-<span class="nc bnc" id="L171" title="All 2 branches missed.">		disciplina.setPeriodo(Integer.parseInt(!periodoStr.isEmpty()?periodoStr:&quot;-1&quot;));</span>
-		
-<span class="nc" id="L173">		disciplina.setCodigo(infoDisciplina.get(2).text().trim());</span>
-<span class="nc" id="L174">		disciplina.setNomeDisciplina(infoDisciplina.get(3).text().trim());</span>
-<span class="nc" id="L175">		disciplina.setChPrevista(Integer.parseInt(infoDisciplina.get(5).text().trim()));</span>
-<span class="nc" id="L176">		String notas = infoDisciplina.get(7).text().trim();</span>
-<span class="nc" id="L177">		String nfe1 = &quot;0&quot;, nfe2 = &quot;0&quot;;</span>
-<span class="nc bnc" id="L178" title="All 2 branches missed.">		if(notas.contains(&quot;-&quot;)){</span>
-<span class="nc" id="L179">			nfe1 = notas.split(&quot;-&quot;)[0].trim();</span>
-<span class="nc" id="L180">			nfe2 = notas.split(&quot;-&quot;)[1].trim();</span>
-		}
-<span class="nc" id="L182">		disciplina.setNf1e(Float.parseFloat(nfe1));</span>
-<span class="nc" id="L183">		disciplina.setNf1e(Float.parseFloat(nfe2));</span>
-<span class="nc" id="L184">		String creditosStr = infoDisciplina.get(6).text().trim();</span>
-		// disciplinas em que foi feito equivalencia creditos é zero. Olhar disciplinas fora da matriz
-<span class="nc bnc" id="L186" title="All 2 branches missed.">		disciplina.setCreditos(Integer.parseInt(!creditosStr.isEmpty()?creditosStr:&quot;0&quot;));</span>
-		
-<span class="nc" id="L188">		String freqenciaStr = infoDisciplina.get(8).text().trim();</span>
-		// disciplinas nao cursada tem frequencia vazia.
-<span class="nc bnc" id="L190" title="All 2 branches missed.">		disciplina.setFrequencia(Float.parseFloat(!freqenciaStr.isEmpty()?freqenciaStr:&quot;0&quot;));</span>
-<span class="nc" id="L191">		disciplina.setSituacao(infoDisciplina.get(9).text().trim());</span>
-		
-<span class="nc" id="L193">		aluno.getDisciplinas().add(disciplina);</span>
-<span class="nc" id="L194">	}</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">		disciplina.setPeriodo(Integer.parseInt(!periodoStr.isEmpty() ? periodoStr : &quot;-1&quot;));</span>
 
-	public static void processarInfoCH(Aluno aluno, Element tr){
-<span class="nc" id="L197">		ArrayList&lt;Element&gt; infoCh = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L192">		disciplina.setCodigo(infoDisciplina.get(2).text().trim());</span>
+<span class="nc" id="L193">		disciplina.setNomeDisciplina(infoDisciplina.get(3).text().trim());</span>
+<span class="nc" id="L194">		disciplina.setChPrevista(Integer.parseInt(infoDisciplina.get(5).text().trim()));</span>
+<span class="nc" id="L195">		String notas = infoDisciplina.get(7).text().trim();</span>
+<span class="nc" id="L196">		String nfe1 = &quot;0&quot;, nfe2 = &quot;0&quot;;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">		if (notas.contains(&quot;-&quot;)) {</span>
+<span class="nc" id="L198">			nfe1 = notas.split(&quot;-&quot;)[0].trim();</span>
+<span class="nc" id="L199">			nfe2 = notas.split(&quot;-&quot;)[1].trim();</span>
+		}
+<span class="nc" id="L201">		disciplina.setNf1e(Float.parseFloat(nfe1));</span>
+<span class="nc" id="L202">		disciplina.setNf1e(Float.parseFloat(nfe2));</span>
+<span class="nc" id="L203">		String creditosStr = infoDisciplina.get(6).text().trim();</span>
+		// disciplinas em que foi feito equivalencia creditos é zero. Olhar disciplinas
+		// fora da matriz
+<span class="nc bnc" id="L206" title="All 2 branches missed.">		disciplina.setCreditos(Integer.parseInt(!creditosStr.isEmpty() ? creditosStr : &quot;0&quot;));</span>
+
+<span class="nc" id="L208">		String freqenciaStr = infoDisciplina.get(8).text().trim();</span>
+		// disciplinas nao cursada tem frequencia vazia.
+<span class="nc bnc" id="L210" title="All 2 branches missed.">		disciplina.setFrequencia(Float.parseFloat(!freqenciaStr.isEmpty() ? freqenciaStr : &quot;0&quot;));</span>
+<span class="nc" id="L211">		disciplina.setSituacao(infoDisciplina.get(9).text().trim());</span>
+
+<span class="nc" id="L213">		aluno.getDisciplinas().add(disciplina);    // ??</span>
+<span class="nc" id="L214">	}</span>
+
+	public static void processarInfoCH(Aluno aluno, Element tr) {
+<span class="nc" id="L217">		ArrayList&lt;Element&gt; infoCh = new ArrayList&lt;&gt;();</span>
 		// System.out.println(&quot;**********************************&quot;);
-<span class="nc bnc" id="L199" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
-<span class="nc" id="L200">			infoCh.add(e);</span>
-<span class="nc" id="L201">		}</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">		for (Element e : tr.getElementsByTag(&quot;td&quot;)) {</span>
+<span class="nc" id="L220">			infoCh.add(e);</span>
+<span class="nc" id="L221">		}</span>
 		// aluno.setChObrigatoriaExigida(Integer.parseInt(infoCh.get(1).text().trim()));
 		// aluno.setChEstagioExigida(Integer.parseInt(infoCh.get(1).text().trim()));
 		// aluno.setChTotalExigida(Integer.parseInt(infoCh.get(1).text().trim()));
-<span class="nc" id="L205">		aluno.setChObrigatoriaCumprida(Integer.parseInt(infoCh.get(1).text().trim()));</span>
-<span class="nc" id="L206">		aluno.setChEstagioCumprida(Integer.parseInt(infoCh.get(3).text().trim()));</span>
-<span class="nc" id="L207">		aluno.setChTotalCumprida(Integer.parseInt(infoCh.get(7).text().trim()));</span>
-		
-<span class="nc" id="L209">	}</span>
+<span class="nc" id="L225">		aluno.setChObrigatoriaCumprida(Integer.parseInt(infoCh.get(1).text().trim()));</span>
+<span class="nc" id="L226">		aluno.setChEstagioCumprida(Integer.parseInt(infoCh.get(3).text().trim()));</span>
+<span class="nc" id="L227">		aluno.setChTotalCumprida(Integer.parseInt(infoCh.get(7).text().trim()));</span>
+
+<span class="nc" id="L229">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
