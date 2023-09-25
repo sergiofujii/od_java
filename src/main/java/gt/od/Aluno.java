@@ -14,13 +14,20 @@ public class Aluno {
 	private int id;
 	private String matricula;
 	private String nome;
-	private String dataNasc;
+	// private String dataNasc;
 	private String curso;
-	private float  coeficienteRendimento;
-	private float  coeficienteProgressao;
-	private int chTotalCumprida;
-	private int chEstagioCumprida;
-	private int chObrigatoriaCumprida;
+	// private float  coeficienteRendimento;
+	// private float  coeficienteProgressao;
+	// private int chTotalCumprida;
+	// private int chEstagioCumprida;
+	// private int chObrigatoriaCumprida;
+
+	private String ingresso;
+	private String periodo;
+	private String matriz;
+	private String cpf;
+	private String email;
+	private String situacao_sistemica;
 
 
 	private List<Disciplina> disciplinas;
@@ -37,20 +44,68 @@ public class Aluno {
 		this.nome = nome;
 	}
 
-	public void setDataNasc(String dataNasc) {
-		this.dataNasc = dataNasc;
-	}
-
 	public void setCurso(String curso) {
 		this.curso = curso;
 	}
 
-	public void setCoeficienteRendimento(float coeficienteRendimento) {
-		this.coeficienteRendimento = coeficienteRendimento;
+	// Getter para o atributo "ingresso"
+	public String getIngresso() {
+		return ingresso;
 	}
 
-	public void setCoeficienteProgressao(float coeficienteProgressao) {
-		this.coeficienteProgressao = coeficienteProgressao;
+	// Setter para o atributo "ingresso"
+	public void setIngresso(String ingresso) {
+		this.ingresso = ingresso;
+	}
+
+	// Getter para o atributo "periodo"
+	public String getPeriodo() {
+		return periodo;
+	}
+
+	// Setter para o atributo "periodo"
+	public void setPeriodo(String periodo) {
+		this.periodo = periodo;
+	}
+
+	// Getter para o atributo "matriz"
+	public String getMatriz() {
+		return matriz;
+	}
+
+	// Setter para o atributo "matriz"
+	public void setMatriz(String matriz) {
+		this.matriz = matriz;
+	}
+
+	// Getter para o atributo "cpf"
+	public String getCpf() {
+		return cpf;
+	}
+
+	// Setter para o atributo "cpf"
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	// Getter para o atributo "email"
+	public String getEmail() {
+		return email;
+	}
+
+	// Setter para o atributo "email"
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	// Getter para o atributo "situacao_sistemica"
+	public String getSituacaoSistemica() {
+		return situacao_sistemica;
+	}
+
+	// Setter para o atributo "situacao_sistemica"
+	public void setSituacaoSistemica(String situacao_sistemica) {
+		this.situacao_sistemica = situacao_sistemica;
 	}
 
 	private void closeConnection() {
@@ -65,18 +120,6 @@ public class Aluno {
 		disciplinas = new ArrayList<>();
 
     }
-
-	public void setChTotalCumprida(int chTotalCumprida) {
-		this.chTotalCumprida = chTotalCumprida;
-	}
-
-	public void setChEstagioCumprida(int chEstagioCumprida) {
-		this.chEstagioCumprida = chEstagioCumprida;
-	}
-
-	public void setChObrigatoriaCumprida(int chObrigatoriaCumprida) {
-		this.chObrigatoriaCumprida = chObrigatoriaCumprida;
-	}
 	
 	public void setDisciplinas(List<Disciplina> disciplinas) {
 		this.disciplinas = disciplinas;
@@ -89,7 +132,7 @@ public class Aluno {
 	public void salvar(){
 		openConnection();
 		salvarAluno();
-		salvarDisciplinasCursadas();
+		// salvarDisciplinasCursadas();
 		closeConnection();
 	}
 
@@ -98,22 +141,23 @@ public class Aluno {
 		ResultSet rs = null;
 		try {
 			stmt = connection.createStatement();
-			String query = "select * from aluno where matricula='" + this.matricula + "';";
+			String query = "select * from alunos where matricula='" + this.matricula + "';";
 			rs = stmt.executeQuery(query);
 			if (!rs.next()) {
-				query = "INSERT INTO `aluno` (`matricula`, `nome`, `data_nasc`, `curso`, `coeficiente_rendimento`"+
-				", `coeficiente_progressao`, `ch_obrigatoria_cumprida`, `ch_estagio_cumprida`, `ch_total_cumprida`"+
-				") " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				query = "INSERT INTO alunos (nome, matricula, curso, ingresso, periodo, matriz, cpf, email, situacao_sistemica) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-				ps.setString(1, this.matricula);
-				ps.setString(2, this.nome);
-				ps.setString(3, this.dataNasc);
-				ps.setString(4, this.curso);
-				ps.setFloat(5, this.coeficienteRendimento);
-				ps.setFloat(6, this.coeficienteProgressao);
-				ps.setInt(7, this.chObrigatoriaCumprida);
-				ps.setInt(8, this.chEstagioCumprida);
-				ps.setInt(9, this.chTotalCumprida);
+				ps.setString(1, this.nome);
+				ps.setString(2, this.matricula);
+				ps.setString(3, this.curso);
+				ps.setString(4, this.ingresso);
+				ps.setString(5, this.periodo);
+				ps.setString(6, this.matriz);
+				ps.setString(7, this.cpf);
+				ps.setString(8, this.email);
+				ps.setString(9, this.situacao_sistemica);
+
+
 				ps.executeUpdate();
 				ResultSet generatedKeys = ps.getGeneratedKeys();
                 if(generatedKeys.next()){
@@ -174,7 +218,7 @@ public class Aluno {
 			Class.forName(driverName);
 			// Configurando a nossa conexão com um banco de dados//
 			String serverName = "localhost"; // caminho do servidor do BD
-			String mydatabase = "gtdaod"; // nome do seu banco de dados
+			String mydatabase = "od_suap"; // nome do seu banco de dados
 			String url = "jdbc:mysql://" + serverName + "/" + mydatabase;
 			String username = "gtdaod"; // nome de um usuário de seu BD
 			String password = "senhagtdaod"; // sua senha de acesso

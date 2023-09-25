@@ -44,59 +44,109 @@ public class HistoricoParser {
 		int STATE = 0;
 		// classificando os elementos da página HTML
 
+		//pegar o primeiro elemento com a tag <dl>
+		Element dl = doc.getElementsByTag("dl").first();
+
+		//pegar os elementos dd
+		// Elements dd = dl.getElementsByTag("dd");
+
+		// processar dados do aluno usando
+		processarDadosAluno(aluno, dl); 
+		
+
+
+
+		// ----------------------------
+
+        // Selecione os elementos <div> dentro de <dl>
+        // Elements divElements = dl.select("div");
+
+        // // Itere sobre os elementos <div>
+        // for (Element div : divElements) {
+        //     // Selecione os elementos <dt> e <dd> dentro de <div>
+        //     Element dtElement = div.selectFirst("dt");
+        //     Element ddElement = div.selectFirst("dd");
+
+        //     // Verifique se os elementos <dt> e <dd> foram encontrados
+        //     if (dtElement != null && ddElement != null) {
+        //         // Imprima o texto de <dt> e <dd>
+        //         System.out.println("Texto de <dt>: " + dtElement.text().trim());
+        //         System.out.println("Texto de <dd>: " + ddElement.text().trim());
+        //     }
+        // }
+    
+		
+		
+		
+		
+
+		// // mostrar os elementos dd
+		// for (Element e : dd) {
+		// 	System.out.println(e.text());
+		// }
+
+
+
 		// for (Element e : doc.getAllElements()) { // conteudoTexto eh a class de um tr
-		for (Element e : doc.select("tr")) {	
-			if (e.hasAttr("class") && e.attr("class").isEmpty()) 
-				System.out.println(e.toString() + "\n");
+		for (Element e : doc.select("div.table-responsive tr")) {	
+			// if (e.hasAttr("class") && e.attr("class").equals("table-responsive")) {
+				// System.out.println(e.toString() + "\n");
 			// IDENTIFICANDO A PARTE INICIAL.
-			if (e.classNames().contains("conteudoTexto") && !e.attr("bgcolor").equals("")) {
-				if (i <= 3) {
-					switch (i) {
+				// if (e.classNames().contains("conteudoTexto") && !e.attr("bgcolor").equals("")) {
+				// if (e.tag().toString().equals("table")) {
+					
+					// System.out.println(e.toString()+ "\n");
+					
+					
+					// if (i <= 3) {
+					// 	switch (i) {
+					// 		case 0:
+					// 			dadosAluno = e;
+					// 			System.out.println("**********************************  " + i + "  **********************************");
+					// 			System.out.println(e.toString());
+					// 			i++;
+					// 			processarDadosAluno(aluno, e);
+					// 			break;
+					// 		case 1:
+					// 			dadosCurso = e;
+					// 			System.out.println("**********************************  " + i + "  **********************************");
+					// 			System.out.println(e.toString());
+					// 			processarDadosCurso(aluno, e);
+					// 			i++;
+					// 			break;
+					// 		case 2:
+					// 			numGerais = e;
+					// 			System.out.println("**********************************  "  + i + "  **********************************");
+					// 			System.out.println(e.toString());
+					// 			processarNumerosGerais(aluno, e);
+					// 			i++;
+					// 			break;
+					// 		case 3: // faz nada
+					// 			break;
+					// 	}
+					// }
+					switch (STATE) {
 						case 0:
-							dadosAluno = e;
-							System.out.println(e.toString());
-							System.out.println("**********************************");
-							i++;
-							processarDadosAluno(aluno, e);
-							break;
+							break;// so ignora
 						case 1:
-							dadosCurso = e;
-							System.out.println(e.toString());
-							System.out.println("**********************************");
-							processarDadosCurso(aluno, e);
-							i++;
+							disciplinasNaMatriz.add(e);
+							// System.out.println(e.toString());
+							// System.out.println("**********************************");
 							break;
 						case 2:
-							numGerais = e;
-							System.out.println(e.toString());
-							System.out.println("**********************************");
-							processarNumerosGerais(aluno, e);
-							i++;
+							disciplinasForaDaMatriz.add(e);
+							// System.out.println(e.toString());
+							// System.out.println("**********************************");
 							break;
-						case 3: // faz nada
+						case 3:
+							infoCH.add(e);
+							// System.out.println(e.toString());
+							// System.out.println("**********************************");
 							break;
 					}
-				}
-				switch (STATE) {
-					case 0:
-						break;// so ignora
-					case 1:
-						disciplinasNaMatriz.add(e);
-						// System.out.println(e.toString());
-						// System.out.println("**********************************");
-						break;
-					case 2:
-						disciplinasForaDaMatriz.add(e);
-						// System.out.println(e.toString());
-						// System.out.println("**********************************");
-						break;
-					case 3:
-						infoCH.add(e);
-						// System.out.println(e.toString());
-						// System.out.println("**********************************");
-						break;
-				}
-			}
+				// }
+			// }
+
 			if (e.classNames().contains("conteudoTitulo")) {
 				if (e.text().contains("Disciplinas cursadas na matriz curricular:")) {
 					// System.out.println("ENTRANDO NO ESTADO 1");
@@ -135,18 +185,37 @@ public class HistoricoParser {
 			}
 		}
 
-		// aluno.salvar();
+		aluno.salvar();
 	}
 
-	public static void processarDadosAluno(Aluno aluno, Element tr) {
+	// public static void processarDadosAluno(Aluno aluno, Element tr) {
+	// 	ArrayList<Element> infoAluno = new ArrayList<>();
+	// 	// System.out.println("**********************************");
+	// 	for (Element e : tr.getElementsByTag("td")) {
+	// 		infoAluno.add(e);
+	// 	}
+	// 	aluno.setMatricula(infoAluno.get(0).text().trim());
+	// 	aluno.setNome(infoAluno.get(1).text().trim());
+	// 	aluno.setDataNasc(infoAluno.get(2).text().trim());
+	// }
+
+	public static void processarDadosAluno(Aluno aluno, Element dl) {
 		ArrayList<Element> infoAluno = new ArrayList<>();
-		// System.out.println("**********************************");
-		for (Element e : tr.getElementsByTag("td")) {
+		System.out.println("**********************************");
+		for (Element e :dl.getElementsByTag("dd")) {
 			infoAluno.add(e);
+			// System.out.println(e.text() + "\n");
 		}
-		aluno.setMatricula(infoAluno.get(0).text().trim());
-		aluno.setNome(infoAluno.get(1).text().trim());
-		aluno.setDataNasc(infoAluno.get(2).text().trim());
+
+		aluno.setNome(infoAluno.get(0).text().trim());
+		aluno.setMatricula(infoAluno.get(1).text().trim());
+		aluno.setIngresso(infoAluno.get(2).text().trim());
+		aluno.setEmail(infoAluno.get(3).text().trim());
+		aluno.setCpf(infoAluno.get(5).text().trim());
+		aluno.setPeriodo(infoAluno.get(6).text().trim());
+		aluno.setCurso(infoAluno.get(8).text().trim());
+		aluno.setMatriz(infoAluno.get(9).text().trim());
+		aluno.setSituacaoSistemica(infoAluno.get(11).text().trim());
 	}
 
 	public static void processarDadosCurso(Aluno aluno, Element tr) {
@@ -164,8 +233,8 @@ public class HistoricoParser {
 		for (Element e : tr.getElementsByTag("td")) {
 			infoGeral.add(e);
 		}
-		aluno.setCoeficienteRendimento(Float.parseFloat(infoGeral.get(0).text().trim()));
-		aluno.setCoeficienteProgressao(Float.parseFloat(infoGeral.get(1).text().trim()));
+		// aluno.setCoeficienteRendimento(Float.parseFloat(infoGeral.get(0).text().trim()));
+		// aluno.setCoeficienteProgressao(Float.parseFloat(infoGeral.get(1).text().trim()));
 	}
 
 	public static void processarDisciplina(Aluno aluno, Element tr) {
@@ -222,9 +291,10 @@ public class HistoricoParser {
 		// aluno.setChObrigatoriaExigida(Integer.parseInt(infoCh.get(1).text().trim()));
 		// aluno.setChEstagioExigida(Integer.parseInt(infoCh.get(1).text().trim()));
 		// aluno.setChTotalExigida(Integer.parseInt(infoCh.get(1).text().trim()));
-		aluno.setChObrigatoriaCumprida(Integer.parseInt(infoCh.get(1).text().trim()));
-		aluno.setChEstagioCumprida(Integer.parseInt(infoCh.get(3).text().trim()));
-		aluno.setChTotalCumprida(Integer.parseInt(infoCh.get(7).text().trim()));
+		// aluno.setChObrigatoriaCumprida(Integer.parseInt(infoCh.get(1).text().trim()));
+		// aluno.setChEstagioCumprida(Integer.parseInt(infoCh.get(3).text().trim()));
+		// aluno.setChTotalCumprida(Integer.parseInt(infoCh.get(7).text().trim()));
 
 	}
+	
 }
