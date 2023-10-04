@@ -7894,7 +7894,19 @@
                                         <td class="text-center">8,00</td>
                                         <td class="text-center"><!-- componente suap -->
 
-
+CREATE TABLE IF NOT EXISTS `od_suap`.`alunos` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(200) NULL,
+  `matricula` VARCHAR(45) NULL,
+  `curso` VARCHAR(100) NULL,
+  `ingresso` VARCHAR(45) NULL,
+  `periodo` VARCHAR(45) NULL,
+  `matriz` VARCHAR(100) NULL,
+  `cpf` VARCHAR(45) NULL,
+  `email` VARCHAR(100) NULL,
+  `situacao_sistemica` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
                                             1ª Etapa: <span>8,00</span><br>
 
 
